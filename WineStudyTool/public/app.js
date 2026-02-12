@@ -86,15 +86,15 @@ function centroid(points) {
 }
 
 function draw() {
-  clearCanvas();
-  if (!image) return;
+clearCanvas();
+if (!image) return;
   
-  // Apply zoom and pan transformations
-  ctx.save();
-  ctx.translate(origin.x, origin.y);
-  ctx.scale(scale, scale);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-  ctx.restore();
+// Apply zoom and pan transformations
+ctx.save();
+ctx.translate(origin.x, origin.y);
+ctx.scale(scale, scale);
+ctx.drawImage(image, 0, 0, canvas.width / scale, canvas.height / scale);
+ctx.restore();
 
   // draw existing regions
   for (const r of data.regions) {
@@ -104,8 +104,8 @@ function draw() {
     ctx.scale(scale, scale);
     ctx.beginPath();
     r.points.forEach((p, i) => {
-      const x = p.x * canvas.width;
-      const y = p.y * canvas.height;
+      const x = p.x * canvas.width / scale;
+      const y = p.y * canvas.height / scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.closePath();
@@ -120,8 +120,8 @@ function draw() {
     label.className = 'label';
     label.textContent = r.showName ? r.name : '';
     const c = r.labelPos || centroid(r.points);
-    const labelX = (c.x * canvas.width) * scale + origin.x;
-    const labelY = (c.y * canvas.height) * scale + origin.y;
+    const labelX = (c.x * canvas.width / scale) * scale + origin.x;
+    const labelY = (c.y * canvas.height / scale) * scale + origin.y;
     label.style.left = (labelX / canvas.width * 100) + '%';
     label.style.top = (labelY / canvas.height * 100) + '%';
     overlay.appendChild(label);
@@ -134,8 +134,8 @@ function draw() {
     ctx.scale(scale, scale);
     ctx.beginPath();
     drawing.points.forEach((p, i) => {
-      const x = p.x * canvas.width;
-      const y = p.y * canvas.height;
+      const x = p.x * canvas.width / scale;
+      const y = p.y * canvas.height / scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.strokeStyle = '#0078d4';
@@ -151,8 +151,8 @@ function canvasToNorm(pt) {
   const canvasX = pt.x - rect.left;
   const canvasY = pt.y - rect.top;
   // Account for zoom and pan
-  const normX = (canvasX - origin.x) / scale / canvas.width;
-  const normY = (canvasY - origin.y) / scale / canvas.height;
+  const normX = (canvasX - origin.x) / scale / (canvas.width / scale);
+  const normY = (canvasY - origin.y) / scale / (canvas.height / scale);
   return { x: normX, y: normY };
 }
 
