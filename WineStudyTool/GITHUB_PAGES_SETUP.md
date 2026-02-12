@@ -15,7 +15,7 @@
    - Branch: **master**
    - Folder: **/docs**
    - Click **Save**
-
+    
 3. **Wait for Deployment**
    - GitHub will build and deploy your site (takes 1-2 minutes)
    - Visit: https://mathematicalguy.github.io/WineStudyTool/
