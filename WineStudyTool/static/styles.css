@@ -28,7 +28,7 @@ main { display: grid; grid-template-columns: 1fr 320px; gap: 12px; padding: 12px
 #canvas { width: 100%; height: 100%; display: block; background: #0c0c10 center/contain no-repeat; border-radius: 10px; }
 #overlay { position: absolute; inset: 0; pointer-events: none; }
 .panel {
-  border: 1px solid #ff4a4a;
+  border: 1px solid #ff4a4a !important;
   border-radius: 10px;
   padding: 12px;
   height: 100%;
@@ -47,7 +47,7 @@ main { display: grid; grid-template-columns: 1fr 320px; gap: 12px; padding: 12px
 }
 .region-color { width: 14px; height: 14px; border-radius: 4px; border: 1px solid #4b4b5a; }
 .region-name { flex: 1; }
-button, select, input[type="text"] {
+button, select, input, textarea {
   background: #16161e;
   color: #f0f0f2;
   border: 1px solid #30303c;
@@ -55,8 +55,8 @@ button, select, input[type="text"] {
   padding: 4px 8px;
   font-size: 12px;
 }
-button:hover, select:hover, input[type="text"]:hover { border-color: #4a4a58; }
-button:focus, select:focus, input[type="text"]:focus {
+button:hover, select:hover, input:hover, textarea:hover { border-color: #4a4a58; }
+button:focus, select:focus, input:focus, textarea:focus {
   outline: none;
   border-color: #ff4a4a;
   box-shadow: 0 0 0 2px rgba(255, 74, 74, 0.2);
