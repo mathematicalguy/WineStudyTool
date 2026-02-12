@@ -1,4 +1,4 @@
-# GitHub Pages Deployment Guide
+﻿# GitHub Pages Deployment Guide
 
 ## Quick Setup Steps
 
@@ -70,46 +70,24 @@ The GitHub Pages version:
 - Verify JSON files are valid (use a JSON validator)
 - Check that file names in `AVAILABLE_MAPS` match actual files in `docs/polyregions/`
 
-## Testing Locally
-
-You can test the GitHub Pages version locally:
-
-1. Install a simple HTTP server:
-   ```bash
-   npm install -g http-server
-   ```
-
-2. Serve the docs folder:
-   ```bash
-   cd WineStudyTool/docs
-   http-server
-   ```
-
-3. Open: http://localhost:8080
-
-Or use Python:
-```bash
-cd WineStudyTool/docs
-python -m http.server 8080
-```
 
 ## Files Structure
 
 ```
 WineStudyTool/
-??? docs/                    # GitHub Pages folder
-?   ??? .nojekyll           # Prevents Jekyll processing
-?   ??? index.html          # Main page
-?   ??? app.js              # Client-side JavaScript
-?   ??? styles.css          # Styles
-?   ??? maps/               # Map images
-?   ?   ??? France11.png
-?   ?   ??? Bordeaux.png
-?   ??? polyregions/        # Polygon data
-?       ??? France11.json
-?       ??? Bordeaux.json
-??? public/                 # Original server version
-??? server.js               # Node.js server
-??? package.json
-??? README.md
+├── docs/                    # GitHub Pages folder
+│   ├── .nojekyll           # Prevents Jekyll processing
+│   ├── index.html          # Main page
+│   ├── app.js              # Client-side JavaScript
+│   ├── styles.css          # Styles
+│   ├── maps/               # Map images
+│   │   ├── France11.png
+│   │   └── Bordeaux.png
+│   └── polyregions/        # Polygon data
+│       ├── France11.json
+│       └── Bordeaux.json
+├── public/                 # Original server version
+├── server.js               # Node.js server
+├── package.json
+└── README.md
 ```
