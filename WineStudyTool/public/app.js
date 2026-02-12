@@ -361,8 +361,16 @@ async function loadMaps() {
 async function loadMap(name) {
   imageName = name;
   image = new Image();
+  const loadPromise = new Promise((resolve) => {
+    image.onload = () => resolve(true);
+    image.onerror = () => resolve(false);
+  });
   image.src = `/maps/${encodeURIComponent(name)}`;
-  await image.decode().catch(() => {});
+  if (image.decode) {
+    await image.decode().catch(() => loadPromise);
+  } else {
+    await loadPromise;
+  }
   
   // Reset zoom and pan
   scale = 1;

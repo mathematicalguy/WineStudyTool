@@ -407,10 +407,17 @@ function loadMaps() {
 async function loadMap(name) {
   imageName = name;
   image = new Image();
+  const loadPromise = new Promise((resolve) => {
+    image.onload = () => resolve(true);
+    image.onerror = () => resolve(false);
+  });
   image.src = `./maps/${encodeURIComponent(name)}`;
-  
   try {
-    await image.decode();
+    if (image.decode) {
+      await image.decode().catch(() => loadPromise);
+    } else {
+      await loadPromise;
+    }
   } catch (err) {
     console.error('Failed to load image:', err);
   }
