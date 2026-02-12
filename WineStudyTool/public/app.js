@@ -21,6 +21,7 @@ let imageName = '';
 let scale = 1;
 let origin = { x: 0, y: 0 };
 let panStart = null;
+let imageRect = { x: 0, y: 0, width: 0, height: 0 }; // actual image dimensions on canvas
 
 // Data model: { regions: [ { id, name, color, points: [{x,y}], labelPos: {x,y} } ] }
 let data = { regions: [] };
@@ -89,11 +90,33 @@ function draw() {
 clearCanvas();
 if (!image) return;
   
+// Calculate image dimensions maintaining aspect ratio
+const canvasAspect = canvas.width / canvas.height;
+const imageAspect = image.width / image.height;
+let drawWidth, drawHeight;
+
+if (imageAspect > canvasAspect) {
+  // Image is wider - fit to width
+  drawWidth = canvas.width / scale;
+  drawHeight = drawWidth / imageAspect;
+} else {
+  // Image is taller - fit to height
+  drawHeight = canvas.height / scale;
+  drawWidth = drawHeight * imageAspect;
+}
+
+// Center the image
+const drawX = (canvas.width / scale - drawWidth) / 2;
+const drawY = (canvas.height / scale - drawHeight) / 2;
+
+// Store image rect for coordinate conversion
+imageRect = { x: drawX * scale, y: drawY * scale, width: drawWidth * scale, height: drawHeight * scale };
+
 // Apply zoom and pan transformations
 ctx.save();
 ctx.translate(origin.x, origin.y);
 ctx.scale(scale, scale);
-ctx.drawImage(image, 0, 0, canvas.width / scale, canvas.height / scale);
+ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
 ctx.restore();
 
   // draw existing regions
@@ -104,8 +127,8 @@ ctx.restore();
     ctx.scale(scale, scale);
     ctx.beginPath();
     r.points.forEach((p, i) => {
-      const x = p.x * canvas.width / scale;
-      const y = p.y * canvas.height / scale;
+      const x = imageRect.x / scale + p.x * imageRect.width / scale;
+      const y = imageRect.y / scale + p.y * imageRect.height / scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.closePath();
@@ -120,8 +143,8 @@ ctx.restore();
     label.className = 'label';
     label.textContent = r.showName ? r.name : '';
     const c = r.labelPos || centroid(r.points);
-    const labelX = (c.x * canvas.width / scale) * scale + origin.x;
-    const labelY = (c.y * canvas.height / scale) * scale + origin.y;
+    const labelX = (imageRect.x / scale + c.x * imageRect.width / scale) * scale + origin.x;
+    const labelY = (imageRect.y / scale + c.y * imageRect.height / scale) * scale + origin.y;
     label.style.left = (labelX / canvas.width * 100) + '%';
     label.style.top = (labelY / canvas.height * 100) + '%';
     overlay.appendChild(label);
@@ -134,8 +157,8 @@ ctx.restore();
     ctx.scale(scale, scale);
     ctx.beginPath();
     drawing.points.forEach((p, i) => {
-      const x = p.x * canvas.width / scale;
-      const y = p.y * canvas.height / scale;
+      const x = imageRect.x / scale + p.x * imageRect.width / scale;
+      const y = imageRect.y / scale + p.y * imageRect.height / scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.strokeStyle = '#0078d4';
@@ -151,8 +174,11 @@ function canvasToNorm(pt) {
   const canvasX = pt.x - rect.left;
   const canvasY = pt.y - rect.top;
   // Account for zoom and pan
-  const normX = (canvasX - origin.x) / scale / (canvas.width / scale);
-  const normY = (canvasY - origin.y) / scale / (canvas.height / scale);
+  const imageX = (canvasX - origin.x) / scale - imageRect.x / scale;
+  const imageY = (canvasY - origin.y) / scale - imageRect.y / scale;
+  // Convert to normalized coordinates (0-1 range within the image)
+  const normX = imageX / (imageRect.width / scale);
+  const normY = imageY / (imageRect.height / scale);
   return { x: normX, y: normY };
 }
 
