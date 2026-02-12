@@ -19,6 +19,7 @@
         <button id="studyModeBtn" class="mode-btn">Study mode</button>
         <button id="saveBtn" title="Save polygons in setup mode">Save</button>
         <button id="clearBtn" title="Clear unsaved polygons in setup mode">Clear</button>
+        <button id="resetZoomBtn" title="Reset zoom and pan (R)">Reset View</button>
       </div>
     </header>
 
@@ -30,7 +31,8 @@
       <aside>
         <div class="panel" id="setupPanel">
           <h2>Setup</h2>
-          <div class="hint">Click to add points. Double-click to close polygon. Use Esc to cancel.</div>
+          <div class="hint">Click to add points. Double-click to close polygon. Use Esc to cancel.<br>
+          Mouse wheel to zoom. Right-click drag to pan. R to reset view.</div>
           <ul id="regionsList"></ul>
         </div>
         <div class="panel" id="studyPanel" hidden>

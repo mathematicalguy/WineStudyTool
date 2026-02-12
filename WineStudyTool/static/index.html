@@ -20,6 +20,7 @@
         <button id="saveBtn" title="Download polygons data">Download</button>
         <button id="loadBtn" title="Upload polygons data">Upload</button>
         <button id="clearBtn" title="Clear unsaved polygons in setup mode">Clear</button>
+        <button id="resetZoomBtn" title="Reset zoom and pan (R)">Reset View</button>
       </div>
     </header>
 
@@ -31,7 +32,8 @@
       <aside>
         <div class="panel" id="setupPanel">
           <h2>Setup</h2>
-          <div class="hint">Click to add points. Double-click to close polygon. Use Esc to cancel.</div>
+          <div class="hint">Click to add points. Double-click to close polygon. Use Esc to cancel.<br>
+          Mouse wheel to zoom. Right-click drag to pan. R to reset view.</div>
           <ul id="regionsList"></ul>
         </div>
         <div class="panel" id="studyPanel" hidden>

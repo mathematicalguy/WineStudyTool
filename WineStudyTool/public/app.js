@@ -13,12 +13,14 @@ const setupPanel = document.getElementById('setupPanel');
 const studyPanel = document.getElementById('studyPanel');
 const targetNameEl = document.getElementById('targetName');
 const studyStatus = document.getElementById('studyStatus');
+const resetZoomBtn = document.getElementById('resetZoomBtn');
 
 let currentMode = 'setup'; // 'setup' | 'study'
 let image = null;
 let imageName = '';
 let scale = 1;
 let origin = { x: 0, y: 0 };
+let panStart = null;
 
 // Data model: { regions: [ { id, name, color, points: [{x,y}], labelPos: {x,y} } ] }
 let data = { regions: [] };
@@ -31,6 +33,12 @@ let currentTargetIndex = 0;
 function randColor() {
   const h = Math.floor(Math.random() * 360);
   return `hsl(${h} 70% 70%)`;
+}
+
+function resetView() {
+  scale = 1;
+  origin = { x: 0, y: 0 };
+  draw();
 }
 
 function setMode(mode) {
@@ -80,22 +88,30 @@ function centroid(points) {
 function draw() {
   clearCanvas();
   if (!image) return;
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  
+  // Apply zoom and pan transformations
+  ctx.save();
+  ctx.translate(origin.x, origin.y);
+  ctx.scale(scale, scale);
+  ctx.drawImage(image, 0, 0, canvas.width / scale, canvas.height / scale);
+  ctx.restore();
 
   // draw existing regions
   for (const r of data.regions) {
     if (!r.points || r.points.length < 3) continue;
     ctx.save();
+    ctx.translate(origin.x, origin.y);
+    ctx.scale(scale, scale);
     ctx.beginPath();
     r.points.forEach((p, i) => {
-      const x = p.x * canvas.width;
-      const y = p.y * canvas.height;
+      const x = p.x * canvas.width / scale;
+      const y = p.y * canvas.height / scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.closePath();
     ctx.fillStyle = r.fillOverride || 'rgba(0,0,0,0.08)';
     ctx.strokeStyle = r.strokeOverride || r.color || '#333';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2 / scale;
     ctx.fill();
     ctx.stroke();
     ctx.restore();
@@ -104,23 +120,27 @@ function draw() {
     label.className = 'label';
     label.textContent = r.showName ? r.name : '';
     const c = r.labelPos || centroid(r.points);
-    label.style.left = (c.x * 100) + '%';
-    label.style.top = (c.y * 100) + '%';
+    const labelX = (c.x * canvas.width / scale) * scale + origin.x;
+    const labelY = (c.y * canvas.height / scale) * scale + origin.y;
+    label.style.left = (labelX / canvas.width * 100) + '%';
+    label.style.top = (labelY / canvas.height * 100) + '%';
     overlay.appendChild(label);
   }
 
   // draw current poly being created
   if (currentMode === 'setup' && drawing.points.length) {
     ctx.save();
+    ctx.translate(origin.x, origin.y);
+    ctx.scale(scale, scale);
     ctx.beginPath();
     drawing.points.forEach((p, i) => {
-      const x = p.x * canvas.width;
-      const y = p.y * canvas.height;
+      const x = p.x * canvas.width / scale;
+      const y = p.y * canvas.height / scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.strokeStyle = '#0078d4';
-    ctx.setLineDash([4, 4]);
-    ctx.lineWidth = 2;
+    ctx.setLineDash([4 / scale, 4 / scale]);
+    ctx.lineWidth = 2 / scale;
     ctx.stroke();
     ctx.restore();
   }
@@ -128,7 +148,12 @@ function draw() {
 
 function canvasToNorm(pt) {
   const rect = canvas.getBoundingClientRect();
-  return { x: (pt.x - rect.left) / rect.width, y: (pt.y - rect.top) / rect.height };
+  const canvasX = pt.x - rect.left;
+  const canvasY = pt.y - rect.top;
+  // Account for zoom and pan
+  const normX = (canvasX - origin.x) / scale / (canvas.width / scale);
+  const normY = (canvasY - origin.y) / scale / (canvas.height / scale);
+  return { x: normX, y: normY };
 }
 
 function pickRegion(normPt) {
@@ -193,11 +218,91 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     drawing.points = [];
     draw();
+  } else if (e.key === 'r' || e.key === 'R') {
+    resetView();
+  } else if (e.key === '+' || e.key === '=') {
+    // Zoom in at center
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const zoomFactor = 1.1;
+    const newScale = Math.min(5, scale * zoomFactor);
+    origin.x = centerX - (centerX - origin.x) * (newScale / scale);
+    origin.y = centerY - (centerY - origin.y) * (newScale / scale);
+    scale = newScale;
+    draw();
+  } else if (e.key === '-' || e.key === '_') {
+    // Zoom out at center
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const zoomFactor = 0.9;
+    const newScale = Math.max(0.5, scale * zoomFactor);
+    origin.x = centerX - (centerX - origin.x) * (newScale / scale);
+    origin.y = centerY - (centerY - origin.y) * (newScale / scale);
+    scale = newScale;
+    draw();
   }
+});
+
+// Mouse wheel zoom
+canvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  if (!image) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  // Calculate zoom factor
+  const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+  const newScale = Math.max(0.5, Math.min(5, scale * zoomFactor));
+
+  // Adjust origin to zoom towards mouse position
+  origin.x = mouseX - (mouseX - origin.x) * (newScale / scale);
+  origin.y = mouseY - (mouseY - origin.y) * (newScale / scale);
+
+  scale = newScale;
+  draw();
+}, { passive: false });
+
+// Pan with middle mouse or right mouse button
+canvas.addEventListener('mousedown', (e) => {
+  if (e.button === 1 || e.button === 2) {
+    e.preventDefault();
+    panStart = { x: e.clientX - origin.x, y: e.clientY - origin.y };
+    canvas.style.cursor = 'grabbing';
+  }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+  if (panStart) {
+    origin.x = e.clientX - panStart.x;
+    origin.y = e.clientY - panStart.y;
+    draw();
+  }
+});
+
+canvas.addEventListener('mouseup', (e) => {
+  if (e.button === 1 || e.button === 2) {
+    panStart = null;
+    canvas.style.cursor = 'default';
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  if (panStart) {
+    panStart = null;
+    canvas.style.cursor = 'default';
+  }
+});
+
+// Prevent context menu on right click
+canvas.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
 });
 
 setupModeBtn.addEventListener('click', () => setMode('setup'));
 studyModeBtn.addEventListener('click', () => setMode('study'));
+resetZoomBtn.addEventListener('click', resetView);
 
 saveBtn.addEventListener('click', async () => {
   if (!imageName) return;
@@ -232,6 +337,11 @@ async function loadMap(name) {
   image = new Image();
   image.src = `/maps/${encodeURIComponent(name)}`;
   await image.decode().catch(() => {});
+  
+  // Reset zoom and pan
+  scale = 1;
+  origin = { x: 0, y: 0 };
+  
   fitCanvas();
   // load polygons
   const res = await fetch(`/api/polygons/${encodeURIComponent(name)}`);
