@@ -116,3 +116,59 @@ button { cursor: pointer; }
       0 6px 16px rgba(0, 0, 0, 0.35);
   }
 }
+
+/* -------- Mobile / Touch layout -------- */
+body.mobile-mode header { flex-wrap: wrap; gap: 6px; padding: 8px 10px; }
+body.mobile-mode header h1 { font-size: 16px; width: 100%; }
+body.mobile-mode .controls { width: 100%; justify-content: flex-start; }
+body.mobile-mode .hide-mobile { display: none !important; }
+
+body.mobile-mode main {
+  grid-template-columns: 1fr;
+  padding: 6px;
+  height: calc(100vh - 90px);
+}
+
+body.mobile-mode aside { display: none; }
+
+/* Floating study overlay on mobile */
+.mobile-study-overlay {
+  display: none;
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  background: rgba(15, 15, 20, 0.92);
+  border: 1px solid rgba(255, 74, 74, 0.5);
+  border-radius: 10px;
+  padding: 8px 16px;
+  text-align: center;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  max-width: 90%;
+}
+
+body.mobile-mode .mobile-study-overlay { display: block; }
+
+.mobile-study-overlay .target-name {
+  font-weight: 600;
+  font-size: 20px;
+  color: #f5f5f6;
+  margin-top: 2px;
+}
+
+.mobile-study-overlay .mobile-study-status {
+  margin-top: 4px;
+  min-height: 18px;
+}
+
+@media (max-width: 600px) {
+  header { flex-wrap: wrap; gap: 6px; }
+  header h1 { width: 100%; font-size: 16px; }
+  .controls { width: 100%; justify-content: flex-start; }
+  main { grid-template-columns: 1fr; height: calc(100vh - 90px); padding: 6px; }
+  aside { display: none; }
+  .mobile-study-overlay { display: block; }
+}

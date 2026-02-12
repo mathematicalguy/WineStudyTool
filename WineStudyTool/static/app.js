@@ -16,6 +16,17 @@ const targetNameEl = document.getElementById('targetName');
 const studyStatus = document.getElementById('studyStatus');
 const fileInput = document.getElementById('fileInput');
 const resetZoomBtn = document.getElementById('resetZoomBtn');
+const mobileStudyOverlay = document.getElementById('mobileStudyOverlay');
+const mobileTargetNameEl = document.getElementById('mobileTargetName');
+const mobileStudyStatusEl = document.getElementById('mobileStudyStatus');
+
+// Detect mobile / touch device
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+
+if (isMobile) {
+  document.body.classList.add('mobile-mode');
+}
 
 let currentMode = 'setup'; // 'setup' | 'study'
 let image = null;
@@ -479,11 +490,16 @@ function nextTarget() {
   if (currentTargetIndex >= targetOrder.length) {
     targetNameEl.textContent = 'Done!';
     studyStatus.innerHTML = '<span class="badge ok">All regions completed</span>';
+    if (mobileTargetNameEl) mobileTargetNameEl.textContent = 'Done!';
+    if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '<span class="badge ok">All regions completed</span>';
     return;
   }
   const id = targetOrder[currentTargetIndex];
   const region = data.regions.find(r => r.id === id);
-  targetNameEl.textContent = region ? region.name : '';
+  const name = region ? region.name : '';
+  targetNameEl.textContent = name;
+  if (mobileTargetNameEl) mobileTargetNameEl.textContent = name;
+  if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '';
 }
 
 function handleStudyClick(region) {
@@ -495,6 +511,7 @@ function handleStudyClick(region) {
     region.strokeOverride = 'green';
     region.showName = true;
     studyStatus.innerHTML = '<span class="badge ok">Correct</span>';
+    if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '<span class="badge ok">Correct</span>';
     currentTargetIndex++;
     nextTarget();
   } else {
@@ -502,6 +519,7 @@ function handleStudyClick(region) {
     region.strokeOverride = 'red';
     region.showName = true;
     studyStatus.innerHTML = `<span class="badge err">${region.name}</span>`;
+    if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = `<span class="badge err">${region.name}</span>`;
   }
   draw();
 }
@@ -515,7 +533,89 @@ function generateUUID() {
   });
 }
 
+// -------- Touch support for mobile --------
+let touchState = { type: null, startDist: 0, startScale: 1, startOrigin: null, lastTouch: null, moved: false };
+
+function getTouchDist(t1, t2) {
+  const dx = t1.clientX - t2.clientX;
+  const dy = t1.clientY - t2.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getTouchMid(t1, t2) {
+  return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+}
+
+canvas.addEventListener('touchstart', (e) => {
+  if (!image) return;
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    touchState.type = 'pinch';
+    touchState.startDist = getTouchDist(e.touches[0], e.touches[1]);
+    touchState.startScale = scale;
+    touchState.startOrigin = { x: origin.x, y: origin.y };
+    touchState.pinchMid = getTouchMid(e.touches[0], e.touches[1]);
+  } else if (e.touches.length === 1) {
+    touchState.type = 'single';
+    touchState.lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touchState.moved = false;
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (e) => {
+  if (!image) return;
+  if (touchState.type === 'pinch' && e.touches.length === 2) {
+    e.preventDefault();
+    const dist = getTouchDist(e.touches[0], e.touches[1]);
+    const mid = getTouchMid(e.touches[0], e.touches[1]);
+    const rect = canvas.getBoundingClientRect();
+    const midX = mid.x - rect.left;
+    const midY = mid.y - rect.top;
+    const newScale = Math.max(0.5, Math.min(5, touchState.startScale * (dist / touchState.startDist)));
+    origin.x = midX - (midX - touchState.startOrigin.x) * (newScale / touchState.startScale);
+    origin.y = midY - (midY - touchState.startOrigin.y) * (newScale / touchState.startScale);
+    scale = newScale;
+    draw();
+  } else if (touchState.type === 'single' && e.touches.length === 1 && scale > 1.05) {
+    // Pan only when zoomed in
+    e.preventDefault();
+    const dx = e.touches[0].clientX - touchState.lastTouch.x;
+    const dy = e.touches[0].clientY - touchState.lastTouch.y;
+    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) touchState.moved = true;
+    origin.x += dx;
+    origin.y += dy;
+    touchState.lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    draw();
+  } else if (touchState.type === 'single' && e.touches.length === 1) {
+    const dx = e.touches[0].clientX - touchState.lastTouch.x;
+    const dy = e.touches[0].clientY - touchState.lastTouch.y;
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) touchState.moved = true;
+    touchState.lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+  if (!image) return;
+  // Single-finger tap (no movement) ? treat as click
+  if (touchState.type === 'single' && !touchState.moved && e.changedTouches.length === 1) {
+    const t = e.changedTouches[0];
+    const norm = canvasToNorm({ x: t.clientX, y: t.clientY });
+    if (currentMode === 'study') {
+      const region = pickRegion(norm);
+      if (region) handleStudyClick(region);
+    }
+  }
+  if (e.touches.length === 0) {
+    touchState.type = null;
+  } else if (e.touches.length === 1) {
+    // Went from pinch to single finger
+    touchState.type = 'single';
+    touchState.lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touchState.moved = true; // don't treat lift as a tap
+  }
+}, { passive: false });
+
 // init
 loadMaps();
-setMode('setup');
+setMode(isMobile ? 'study' : 'setup');
 fitCanvas();

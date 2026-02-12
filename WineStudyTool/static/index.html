@@ -15,12 +15,12 @@
           Map:
           <select id="mapSelect"></select>
         </label>
-        <button id="setupModeBtn" class="mode-btn">Setup mode</button>
-        <button id="studyModeBtn" class="mode-btn">Study mode</button>
-        <button id="saveBtn" title="Download polygons data">Download</button>
-        <button id="loadBtn" title="Upload polygons data">Upload</button>
-        <button id="clearBtn" title="Clear unsaved polygons in setup mode">Clear</button>
-        <button id="resetZoomBtn" title="Reset zoom and pan (R)">Reset View</button>
+        <button id="setupModeBtn" class="mode-btn hide-mobile">Setup mode</button>
+        <button id="studyModeBtn" class="mode-btn hide-mobile">Study mode</button>
+        <button id="saveBtn" title="Download polygons data" class="hide-mobile">Download</button>
+        <button id="loadBtn" title="Upload polygons data" class="hide-mobile">Upload</button>
+        <button id="clearBtn" title="Clear unsaved polygons in setup mode" class="hide-mobile">Clear</button>
+        <button id="resetZoomBtn" title="Reset zoom and pan (R)" class="hide-mobile">Reset View</button>
       </div>
     </header>
 
@@ -28,6 +28,11 @@
       <div class="canvas-wrap">
         <canvas id="canvas"></canvas>
         <div id="overlay"></div>
+        <div class="mobile-study-overlay" id="mobileStudyOverlay">
+          <div>Find region:</div>
+          <div id="mobileTargetName" class="target-name"></div>
+          <div class="mobile-study-status" id="mobileStudyStatus"></div>
+        </div>
       </div>
       <aside>
         <div class="panel" id="setupPanel">
