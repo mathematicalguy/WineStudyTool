@@ -238,6 +238,8 @@ function refreshRegionsList() {
 // Setup interactions
 canvas.addEventListener('click', (e) => {
   if (!image) return;
+  // Ignore synthesized click events that follow a touch tap already handled
+  if (Date.now() - touchHandledAt < 500) return;
   const norm = canvasToNorm({ x: e.clientX, y: e.clientY });
   if (currentMode === 'setup') {
     drawing.points.push(norm);
@@ -534,6 +536,7 @@ function generateUUID() {
 }
 
 // -------- Touch support for mobile --------
+let touchHandledAt = 0; // timestamp of last touch-handled tap to suppress synthesized click
 let touchState = { type: null, startDist: 0, startScale: 1, startOrigin: null, lastTouch: null, moved: false };
 
 function getTouchDist(t1, t2) {
@@ -602,7 +605,10 @@ canvas.addEventListener('touchend', (e) => {
     const norm = canvasToNorm({ x: t.clientX, y: t.clientY });
     if (currentMode === 'study') {
       const region = pickRegion(norm);
-      if (region) handleStudyClick(region);
+      if (region) {
+        touchHandledAt = Date.now();
+        handleStudyClick(region);
+      }
     }
   }
   if (e.touches.length === 0) {

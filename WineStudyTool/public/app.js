@@ -216,9 +216,14 @@ function refreshRegionsList() {
   });
 }
 
+// Timestamp of last touch-handled tap to suppress synthesized click
+let touchHandledAt = 0;
+
 // Setup interactions
 canvas.addEventListener('click', (e) => {
   if (!image) return;
+  // Ignore synthesized click events that follow a touch tap already handled
+  if (Date.now() - touchHandledAt < 500) return;
   const norm = canvasToNorm({ x: e.clientX, y: e.clientY });
   if (currentMode === 'setup') {
     drawing.points.push(norm);
