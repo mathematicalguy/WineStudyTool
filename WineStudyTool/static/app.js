@@ -420,6 +420,7 @@ async function loadMap(name) {
   origin = { x: 0, y: 0 };
   
   fitCanvas();
+  requestAnimationFrame(fitCanvas);
   
   // Try to load polygon data
   const mapConfig = AVAILABLE_MAPS.find(m => m.name === name);

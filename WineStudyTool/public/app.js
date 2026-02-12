@@ -369,6 +369,7 @@ async function loadMap(name) {
   origin = { x: 0, y: 0 };
   
   fitCanvas();
+  requestAnimationFrame(fitCanvas);
   // load polygons
   const res = await fetch(`/api/polygons/${encodeURIComponent(name)}`);
   const json = await res.json();
