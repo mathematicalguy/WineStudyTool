@@ -1,22 +1,81 @@
 * { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: #222; }
-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f4f4f4; border-bottom: 1px solid #ddd; }
-h1 { font-size: 18px; margin: 0; }
-.controls { display: flex; gap: 8px; align-items: center; }
-main { display: grid; grid-template-columns: 1fr 300px; gap: 8px; padding: 8px; height: calc(100vh - 54px); }
-.canvas-wrap { position: relative; height: 100%; border: 1px solid #ddd; }
-#canvas { width: 100%; height: 100%; display: block; background: #fff center/contain no-repeat; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: #e9e9ea;
+  background: #0f0f12;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #1a1a22, #14141a);
+  border-bottom: 1px solid #2a2a35;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+h1 { font-size: 18px; margin: 0; color: #f3f3f4; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+main { display: grid; grid-template-columns: 1fr 320px; gap: 12px; padding: 12px; height: calc(100vh - 60px); }
+.canvas-wrap {
+  position: relative;
+  height: 100%;
+  border: 1px solid #2a2a35;
+  border-radius: 10px;
+  background: #0c0c10;
+  box-shadow: inset 0 0 0 1px rgba(255, 59, 59, 0.12), 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+#canvas { width: 100%; height: 100%; display: block; background: #0c0c10 center/contain no-repeat; border-radius: 10px; }
 #overlay { position: absolute; inset: 0; pointer-events: none; }
-.panel { border: 1px solid #ddd; padding: 8px; height: 100%; overflow: auto; }
-.hint { color: #666; font-size: 12px; margin-bottom: 8px; }
+.panel {
+  border: 1px solid #2a2a35;
+  border-radius: 10px;
+  padding: 12px;
+  height: 100%;
+  overflow: auto;
+  background: #15151b;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.hint { color: #b1b1bb; font-size: 12px; margin-bottom: 8px; }
 #regionsList { list-style: none; padding: 0; margin: 0; }
-#regionsList li { border-bottom: 1px solid #eee; padding: 6px 0; display: flex; align-items: center; gap: 6px; }
-.region-color { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #999; }
+#regionsList li {
+  border-bottom: 1px solid #262630;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.region-color { width: 14px; height: 14px; border-radius: 4px; border: 1px solid #4b4b5a; }
 .region-name { flex: 1; }
-.mode-btn.active { background: #0078d4; color: #fff; }
-.target-name { font-weight: 600; margin-top: 6px; font-size: 18px; }
+button, select, input[type="text"] {
+  background: #1b1b24;
+  color: #f0f0f2;
+  border: 1px solid #30303c;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+button:hover, select:hover, input[type="text"]:hover { border-color: #4a4a58; }
+button:focus, select:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: #ff4a4a;
+  box-shadow: 0 0 0 2px rgba(255, 74, 74, 0.2);
+}
+button { cursor: pointer; }
+.mode-btn.active { background: #ff4a4a; color: #1b1b24; border-color: #ff4a4a; }
+.target-name { font-weight: 600; margin-top: 6px; font-size: 18px; color: #f5f5f6; }
 .status { margin-top: 10px; min-height: 20px; }
 .badge { display: inline-block; padding: 2px 6px; border-radius: 8px; font-size: 12px; }
-.badge.ok { background: #d4edda; color: #155724; }
-.badge.err { background: #f8d7da; color: #721c24; }
-.label { position: absolute; transform: translate(-50%, -50%); background: rgba(255,255,255,0.85); padding: 2px 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; pointer-events: none; }
+.badge.ok { background: rgba(52, 199, 89, 0.2); color: #7ce39a; border: 1px solid rgba(52, 199, 89, 0.35); }
+.badge.err { background: rgba(255, 69, 58, 0.2); color: #ff8a84; border: 1px solid rgba(255, 69, 58, 0.35); }
+.label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: rgba(20, 20, 28, 0.9);
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 74, 74, 0.4);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #f4f4f6;
+  pointer-events: none;
+}
