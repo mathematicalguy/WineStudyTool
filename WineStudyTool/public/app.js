@@ -437,7 +437,7 @@ function handleStudyClick(region) {
   const targetId = targetOrder[currentTargetIndex];
   if (!targetId) return;
   // Ignore clicks on already-completed (green) regions
-  if (completedRegions.has(region.id)) return;
+  if (completedRegions.has(region.id) || region.strokeOverride === 'green') return;
   const correct = region.id === targetId;
   if (correct) {
     // Clear any red (wrong) shading from previous incorrect guesses, but keep green ones
