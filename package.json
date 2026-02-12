@@ -1,0 +1,11 @@
+{
+  "name": "wine-study-tool-root",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root package to proxy scripts to subfolder",
+  "scripts": {
+    "start": "npm --prefix WineStudyTool start",
+    "dev": "npm --prefix WineStudyTool run dev",
+    "install-all": "npm --prefix WineStudyTool install"
+  }
+}

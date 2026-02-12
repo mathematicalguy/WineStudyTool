@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server",
+      "skipFiles": [ "<node_internals>/**" ],
+      "program": "${workspaceFolder}/server.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": { "PORT": "3000" },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "http://localhost:(\\d+)",
+        "uriFormat": "http://localhost:%s"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program (legacy)",
+      "skipFiles": [ "<node_internals>/**" ],
+      "program": "${workspaceFolder}/app.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": { "PORT": "3000" },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "http://localhost:(\\d+)",
+        "uriFormat": "http://localhost:%s"
+      }
+    }
+  ]
+}

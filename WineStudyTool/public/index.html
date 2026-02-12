@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wine Study Tool</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Wine Study Tool</h1>
+      <div class="controls">
+        <label>
+          Map:
+          <select id="mapSelect"></select>
+        </label>
+        <button id="setupModeBtn" class="mode-btn">Setup mode</button>
+        <button id="studyModeBtn" class="mode-btn">Study mode</button>
+        <button id="saveBtn" title="Save polygons in setup mode">Save</button>
+        <button id="clearBtn" title="Clear unsaved polygons in setup mode">Clear</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+        <div id="overlay"></div>
+      </div>
+      <aside>
+        <div class="panel" id="setupPanel">
+          <h2>Setup</h2>
+          <div class="hint">Click to add points. Double-click to close polygon. Use Esc to cancel.</div>
+          <ul id="regionsList"></ul>
+        </div>
+        <div class="panel" id="studyPanel" hidden>
+          <h2>Study</h2>
+          <div class="prompt">
+            <div>Find region:</div>
+            <div id="targetName" class="target-name"></div>
+          </div>
+          <div class="status" id="studyStatus"></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
