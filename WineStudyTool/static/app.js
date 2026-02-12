@@ -49,6 +49,7 @@ let hoverPoint = null;
 let hoverRegionId = null;
 let targetOrder = [];
 let currentTargetIndex = 0;
+let completedRegions = new Set();
 
 function randColor() {
   const h = Math.floor(Math.random() * 360);
@@ -471,6 +472,7 @@ function startStudy() {
   const regions = data.regions.filter(r => r.points && r.points.length >= 3);
   targetOrder = shuffle(regions.map(r => r.id));
   currentTargetIndex = 0;
+  completedRegions = new Set();
   for (const r of data.regions) { 
     r.fillOverride = undefined; 
     r.strokeOverride = undefined; 
@@ -491,9 +493,19 @@ function shuffle(arr) {
 function nextTarget() {
   if (currentTargetIndex >= targetOrder.length) {
     targetNameEl.textContent = 'Done!';
-    studyStatus.innerHTML = '<span class="badge ok">All regions completed</span>';
+    studyStatus.innerHTML = '<span class="badge ok">All regions completed — restarting...</span>';
     if (mobileTargetNameEl) mobileTargetNameEl.textContent = 'Done!';
-    if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '<span class="badge ok">All regions completed</span>';
+    if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '<span class="badge ok">All regions completed — restarting...</span>';
+    // Pause, then clear all shading and start a new round
+    setTimeout(() => {
+      for (const r of data.regions) { r.fillOverride = undefined; r.strokeOverride = undefined; r.showName = false; }
+      completedRegions = new Set();
+      const regions = data.regions.filter(r => r.points && r.points.length >= 3);
+      targetOrder = shuffle(regions.map(r => r.id));
+      currentTargetIndex = 0;
+      nextTarget();
+      draw();
+    }, 2000);
     return;
   }
   const id = targetOrder[currentTargetIndex];
@@ -507,11 +519,22 @@ function nextTarget() {
 function handleStudyClick(region) {
   const targetId = targetOrder[currentTargetIndex];
   if (!targetId) return;
+  // Ignore clicks on already-completed (green) regions
+  if (completedRegions.has(region.id)) return;
   const correct = region.id === targetId;
   if (correct) {
+    // Clear any red (wrong) shading from previous incorrect guesses, but keep green ones
+    for (const r of data.regions) {
+      if (!completedRegions.has(r.id)) {
+        r.fillOverride = undefined;
+        r.strokeOverride = undefined;
+        r.showName = false;
+      }
+    }
     region.fillOverride = 'rgba(0,200,0,0.25)';
     region.strokeOverride = 'green';
     region.showName = true;
+    completedRegions.add(region.id);
     studyStatus.innerHTML = '<span class="badge ok">Correct</span>';
     if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '<span class="badge ok">Correct</span>';
     currentTargetIndex++;
