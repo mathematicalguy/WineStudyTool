@@ -39,7 +39,8 @@ let imageRect = { x: 0, y: 0, width: 0, height: 0 }; // actual image dimensions 
 // Available maps configuration
 const AVAILABLE_MAPS = [
   { name: 'France11.png', dataFile: 'France11.json' },
-  { name: 'Bordeaux.png', dataFile: 'Bordeaux.json' }
+  { name: 'Bordeaux.png', dataFile: 'Bordeaux.json' },
+  { name: 'Burgundy.png', dataFile: 'Burgundy.json' }
 ];
 
 // Data model: { regions: [ { id, name, color, points: [{x,y}], labelPos: {x,y} } ] }
