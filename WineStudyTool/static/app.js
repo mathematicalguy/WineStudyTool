@@ -461,14 +461,22 @@ function buildMenu() {
   for (const country of AVAILABLE_MAPS) {
     const item = document.createElement('div');
     item.className = 'map-menu-item';
-    item.innerHTML = `${country.label} <span class="arrow">?</span>`;
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      selectMap(country);
-    });
+    const labelSpan = document.createElement('span');
+    labelSpan.textContent = country.label;
+    item.appendChild(labelSpan);
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    item.appendChild(arrow);
 
     const sub = document.createElement('div');
     sub.className = 'map-submenu';
+
+    // Toggle submenu open/closed on country click
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      item.classList.toggle('expanded');
+      sub.classList.toggle('open');
+    });
 
     // Overall country map entry
     const overall = document.createElement('div');
@@ -505,7 +513,10 @@ function buildMenu() {
 function selectMap(entry) {
   currentMapEntry = entry;
   mapMenu.hidden = true;
-  mapMenuBtn.textContent = (entry.label || 'Map') + ' ?';
+  // Collapse all expanded submenus so the menu is clean when reopened
+  mapMenu.querySelectorAll('.map-menu-item.expanded').forEach(el => el.classList.remove('expanded'));
+  mapMenu.querySelectorAll('.map-submenu.open').forEach(el => el.classList.remove('open'));
+  mapMenuBtn.textContent = (entry.label || 'Map') + ' \u25BE';
   loadMap(entry);
 }
 
