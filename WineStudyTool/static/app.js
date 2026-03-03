@@ -70,7 +70,7 @@ const AVAILABLE_MAPS = [
       { label: 'Liguria',        mapFile: 'Italy/Liguria.png',        dataFile: 'Italy/Liguria.json' },
       { label: 'Marche',         mapFile: 'Italy/Marche.png',         dataFile: 'Italy/Marche.json' },
       { label: 'Molise',         mapFile: 'Italy/Molise.jpg',         dataFile: 'Italy/Molise.json' },
-      { label: 'Piedmont',       mapFile: 'Italy/piedmont.png',       dataFile: 'Italy/piedmont.json' },
+      { label: 'Piedmont',       mapFile: 'Italy/piedmont.png',       dataFile: 'Italy/Piedmont.json' },
       { label: 'Puglia',         mapFile: 'Italy/Puglia.png',         dataFile: 'Italy/Puglia.json' },
       { label: 'Sardinia',       mapFile: 'Italy/Sardinia.png',       dataFile: 'Italy/Sardinia.json' },
       { label: 'Tuscany',        mapFile: 'Italy/Tuscany.png',        dataFile: 'Italy/Tuscany.json' },
