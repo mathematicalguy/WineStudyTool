@@ -5,7 +5,7 @@
 1. **Commit and Push Your Changes**
    ```bash
    git add .
-   git commit -m "Add GitHub Pages support"
+   git commit -m "Update static site"
    git push origin master
    ```
 
@@ -25,17 +25,14 @@
 
 ## What Changed
 
-The application has been converted to work without a Node.js server:
+The application is fully static — no server required:
 
-### Client-Side Version (in `/static` folder)
-- **Fully static**: No server required, runs entirely in the browser
+### Static Version (in `/static` folder)
+- **Fully static**: Runs entirely in the browser
 - **Download/Upload**: Save polygon data as JSON files to your computer
 - **Pre-loaded data**: Polygon data is loaded from JSON files in `/polyregions/`
+- **Hierarchical menus**: France and Italy are top-level categories with sub-region flyout menus
 - **Auto-deployed**: GitHub Actions automatically deploys the `/static` folder on every push to master
-
-### Server Version (in `/public` folder)
-- Original Node.js/Express version still available for local development
-- Run with: `npm start`
 
 ## GitHub Actions Workflow
 
@@ -49,22 +46,16 @@ The deployment is automated using GitHub Actions (`.github/workflows/deploy.yml`
 
 The GitHub Pages version:
 1. GitHub Actions workflow deploys the `/static` folder on every push
-2. Loads map images from `./maps/`
-3. Loads polygon data from `./polyregions/`
+2. Loads map images from `./maps/` (with country subfolders)
+3. Loads polygon data from `./polyregions/` (with country subfolders)
 4. All data is stored in browser memory
 5. You can download/upload polygon configurations as JSON files
 
 ## Adding More Maps
 
-1. Add image files to `static/maps/`
-2. Add JSON files to `static/polyregions/` (optional)
-3. Update `AVAILABLE_MAPS` in `static/app.js`:
-   ```javascript
-   const AVAILABLE_MAPS = [
-     { name: 'France11.png', dataFile: 'France11.json' },
-     { name: 'YourMap.png', dataFile: 'YourMap.json' }
-   ];
-   ```
+1. Add image files to `static/maps/<Country>/`
+2. Add JSON files to `static/polyregions/<Country>/` (or empty placeholder `{ "regions": [] }`)
+3. Update `AVAILABLE_MAPS` in `static/app.js` under the appropriate country entry
 4. Commit and push changes - GitHub Actions will auto-deploy
 
 ## Troubleshooting
@@ -73,31 +64,15 @@ The GitHub Pages version:
 - Check that GitHub Pages source is set to "GitHub Actions" in repository settings
 - Go to Actions tab and verify the workflow ran successfully
 - Wait a few minutes after the workflow completes
-- Check the workflow logs for any errors
-
-**Workflow failing?**
-- Ensure the `/static` folder exists and contains all necessary files
-- Check the Actions tab for detailed error messages
-- Verify permissions are set correctly in repository settings
 
 **Maps not showing?**
 - Check browser console (F12) for errors
-- Verify image files are in `static/maps/` folder
+- Verify image files are in the correct `static/maps/<Country>/` folder
 - Check that file names match in `AVAILABLE_MAPS` array
 
 **JSON data not loading?**
 - Verify JSON files are valid (use a JSON validator)
-- Check that file names in `AVAILABLE_MAPS` match actual files in `static/polyregions/`
-
-## Manual Workflow Trigger
-
-You can manually trigger a deployment without pushing code:
-1. Go to: https://github.com/mathematicalguy/WineStudyTool/actions
-2. Click on "Deploy to GitHub Pages" workflow
-3. Click "Run workflow" button
-4. Select the `master` branch
-5. Click "Run workflow"
-
+- Check that `dataFile` paths in `AVAILABLE_MAPS` match actual files in `static/polyregions/`
 
 ## Files Structure
 
@@ -105,20 +80,33 @@ You can manually trigger a deployment without pushing code:
 WineStudyTool/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml      # GitHub Actions workflow
-├── static/                 # GitHub Pages folder (deployed)
-│   ├── .nojekyll          # Prevents Jekyll processing
-│   ├── index.html         # Main page
-│   ├── app.js             # Client-side JavaScript
-│   ├── styles.css         # Styles
-│   ├── maps/              # Map images
-│   │   ├── France11.png
-│   │   └── Bordeaux.png
-│   └── polyregions/       # Polygon data
-│       ├── France11.json
-│       └── Bordeaux.json
-├── public/                # Original server version
-├── server.js              # Node.js server
-├── package.json
+│       └── deploy.yml          # GitHub Actions workflow
+├── static/                     # GitHub Pages folder (deployed)
+│   ├── .nojekyll              # Prevents Jekyll processing
+│   ├── index.html             # Main page
+│   ├── app.js                 # Client-side JavaScript
+│   ├── styles.css             # Styles
+│   ├── maps/                  # Map images
+│   │   ├── France.png         # France overview
+│   │   ├── Italy.png          # Italy overview
+│   │   ├── France/            # France sub-region maps
+│   │   │   ├── Bordeaux.png
+│   │   │   ├── Burgundy.png
+│   │   │   └── ...
+│   │   └── Italy/             # Italy sub-region maps
+│   │       ├── Tuscany.png
+│   │       ├── Veneto.png
+│   │       └── ...
+│   └── polyregions/           # Polygon data
+│       ├── France.json        # France overview regions
+│       ├── Italy.json         # Italy overview regions
+│       ├── France/            # France sub-region data
+│       │   ├── Bordeaux.json
+│       │   ├── Burgundy.json
+│       │   └── ...
+│       └── Italy/             # Italy sub-region data
+│           ├── Tuscany.json
+│           ├── Veneto.json
+│           └── ...
 └── README.md
 ```

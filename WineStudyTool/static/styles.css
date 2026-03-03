@@ -83,6 +83,54 @@ button:focus, select:focus, input:focus, textarea:focus {
 }
 button { cursor: pointer; }
 .mode-btn.active { background: #ff4a4a; color: #1b1b24; border-color: #ff4a4a; }
+
+/* -------- Map flyout menu -------- */
+.map-menu-wrap { position: relative; }
+.map-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  min-width: 200px;
+  background: #1a1a22;
+  border: 1px solid #2a2a35;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  padding: 4px 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.map-menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  cursor: pointer;
+  color: #d4d4d8;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.map-menu-item:hover { background: #262630; }
+.map-menu-item.active-map { color: #ff4a4a; font-weight: 600; }
+.map-menu-item .arrow { margin-left: 8px; font-size: 10px; }
+.map-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 190px;
+  background: #1a1a22;
+  border: 1px solid #2a2a35;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  padding: 4px 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.map-menu-item:hover > .map-submenu { display: block; }
+.map-submenu .map-menu-item { padding: 5px 12px; }
+.map-menu-divider { height: 1px; background: #2a2a35; margin: 4px 0; }
 .target-name { font-weight: 600; margin-top: 6px; font-size: 18px; color: #f5f5f6; }
 .status { margin-top: 10px; min-height: 20px; }
 .badge { display: inline-block; padding: 2px 6px; border-radius: 8px; font-size: 12px; }

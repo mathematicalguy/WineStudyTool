@@ -1,6 +1,7 @@
 'use strict';
 
-const mapSelect = document.getElementById('mapSelect');
+const mapMenuBtn = document.getElementById('mapMenuBtn');
+const mapMenu = document.getElementById('mapMenu');
 const setupModeBtn = document.getElementById('setupModeBtn');
 const studyModeBtn = document.getElementById('studyModeBtn');
 const saveBtn = document.getElementById('saveBtn');
@@ -36,12 +37,47 @@ let origin = { x: 0, y: 0 };
 let panStart = null;
 let imageRect = { x: 0, y: 0, width: 0, height: 0 }; // actual image dimensions on canvas
 
-// Available maps configuration
+// Available maps configuration — hierarchical by country
 const AVAILABLE_MAPS = [
-  { name: 'France11.png', dataFile: 'France11.json' },
-  { name: 'Bordeaux.png', dataFile: 'Bordeaux.json' },
-  { name: 'Burgundy.png', dataFile: 'Burgundy.json' },
-  { name: 'Champagne.png', dataFile: 'Champagne.json'}
+  {
+    label: 'France',
+    mapFile: 'France.png',
+    dataFile: 'France.json',
+    folder: '',
+    children: [
+      { label: 'Bordeaux',   mapFile: 'France/Bordeaux.png',   dataFile: 'France/Bordeaux.json' },
+      { label: 'Burgundy',   mapFile: 'France/Burgundy.png',   dataFile: 'France/Burgundy.json' },
+      { label: 'Champagne',  mapFile: 'France/Champagne.png',  dataFile: 'France/Champagne.json' },
+      { label: 'Languedoc',  mapFile: 'France/Languedoc.png',  dataFile: 'France/Languedoc.json' },
+      { label: 'Loire',      mapFile: 'France/Loire.png',      dataFile: 'France/Loire.json' },
+      { label: 'Provence',   mapFile: 'France/Provence.png',   dataFile: 'France/Provence.json' },
+      { label: 'Rhone',      mapFile: 'France/Rhone.png',      dataFile: 'France/Rhone.json' }
+    ]
+  },
+  {
+    label: 'Italy',
+    mapFile: 'Italy.png',
+    dataFile: 'Italy.json',
+    folder: '',
+    children: [
+      { label: 'Abruzzo',        mapFile: 'Italy/Abruzzo.png',        dataFile: 'Italy/Abruzzo.json' },
+      { label: 'Alto Adige',     mapFile: 'Italy/AltoAdige.jpg',      dataFile: 'Italy/AltoAdige.json' },
+      { label: 'Bascilicata',    mapFile: 'Italy/Bascilicata.png',    dataFile: 'Italy/Bascilicata.json' },
+      { label: 'Calabria',       mapFile: 'Italy/Calabria.png',       dataFile: 'Italy/Calabria.json' },
+      { label: 'Campania',       mapFile: 'Italy/Campania.png',       dataFile: 'Italy/Campania.json' },
+      { label: 'Emilia Romagna', mapFile: 'Italy/Emilia Romagna.png', dataFile: 'Italy/Emilia Romagna.json' },
+      { label: 'Lazio',          mapFile: 'Italy/Lazio.jpg',          dataFile: 'Italy/Lazio.json' },
+      { label: 'Liguria',        mapFile: 'Italy/Liguria.png',        dataFile: 'Italy/Liguria.json' },
+      { label: 'Marche',         mapFile: 'Italy/Marche.png',         dataFile: 'Italy/Marche.json' },
+      { label: 'Molise',         mapFile: 'Italy/Molise.jpg',         dataFile: 'Italy/Molise.json' },
+      { label: 'Piedmont',       mapFile: 'Italy/piedmont.png',       dataFile: 'Italy/piedmont.json' },
+      { label: 'Puglia',         mapFile: 'Italy/Puglia.png',         dataFile: 'Italy/Puglia.json' },
+      { label: 'Sardinia',       mapFile: 'Italy/Sardinia.png',       dataFile: 'Italy/Sardinia.json' },
+      { label: 'Tuscany',        mapFile: 'Italy/Tuscany.png',        dataFile: 'Italy/Tuscany.json' },
+      { label: 'Umbria',         mapFile: 'Italy/Umbria.png',         dataFile: 'Italy/Umbria.json' },
+      { label: 'Veneto',         mapFile: 'Italy/Veneto.png',         dataFile: 'Italy/Veneto.json' }
+    ]
+  }
 ];
 
 // Data model: { regions: [ { id, name, color, points: [{x,y}], labelPos: {x,y} } ] }
@@ -362,13 +398,13 @@ resetZoomBtn.addEventListener('click', resetView);
 
 // Download polygon data
 saveBtn.addEventListener('click', () => {
-  if (!imageName) return;
+  if (!currentMapEntry) return;
   const dataStr = JSON.stringify(data, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const jsonName = imageName.replace(/\.[^.]+$/, '') + '.json';
+  const jsonName = (currentMapEntry.label || 'map') + '.json';
   a.download = jsonName;
   document.body.appendChild(a);
   a.click();
@@ -407,27 +443,82 @@ clearBtn.addEventListener('click', () => {
   draw();
 });
 
-mapSelect.addEventListener('change', () => loadMap(mapSelect.value));
+// -------- Flyout map menu --------
+let currentMapEntry = null;
 
-function loadMaps() {
-  mapSelect.innerHTML = '';
-  for (const m of AVAILABLE_MAPS) {
-    const opt = document.createElement('option');
-    opt.value = m.name;
-    opt.textContent = m.name;
-    mapSelect.appendChild(opt);
+mapMenuBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mapMenu.hidden = !mapMenu.hidden;
+});
+
+document.addEventListener('click', () => { mapMenu.hidden = true; });
+
+function buildMenu() {
+  mapMenu.innerHTML = '';
+  for (const country of AVAILABLE_MAPS) {
+    const item = document.createElement('div');
+    item.className = 'map-menu-item';
+    item.innerHTML = `${country.label} <span class="arrow">?</span>`;
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectMap(country);
+    });
+
+    const sub = document.createElement('div');
+    sub.className = 'map-submenu';
+
+    // Overall country map entry
+    const overall = document.createElement('div');
+    overall.className = 'map-menu-item';
+    overall.textContent = `${country.label} (Overview)`;
+    overall.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectMap(country);
+    });
+    sub.appendChild(overall);
+
+    if (country.children && country.children.length) {
+      const div = document.createElement('div');
+      div.className = 'map-menu-divider';
+      sub.appendChild(div);
+
+      for (const child of country.children) {
+        const ci = document.createElement('div');
+        ci.className = 'map-menu-item';
+        ci.textContent = child.label;
+        ci.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectMap(child);
+        });
+        sub.appendChild(ci);
+      }
+    }
+
+    item.appendChild(sub);
+    mapMenu.appendChild(item);
   }
-  if (AVAILABLE_MAPS.length) loadMap(AVAILABLE_MAPS[0].name);
 }
 
-async function loadMap(name) {
-  imageName = name;
+function selectMap(entry) {
+  currentMapEntry = entry;
+  mapMenu.hidden = true;
+  mapMenuBtn.textContent = (entry.label || 'Map') + ' ?';
+  loadMap(entry);
+}
+
+function loadMaps() {
+  buildMenu();
+  if (AVAILABLE_MAPS.length) selectMap(AVAILABLE_MAPS[0]);
+}
+
+async function loadMap(entry) {
+  imageName = entry.mapFile;
   image = new Image();
   const loadPromise = new Promise((resolve) => {
     image.onload = () => resolve(true);
     image.onerror = () => resolve(false);
   });
-  image.src = `./maps/${encodeURIComponent(name)}`;
+  image.src = `./maps/${entry.mapFile}`;
   try {
     if (image.decode) {
       await image.decode().catch(() => loadPromise);
@@ -446,10 +537,9 @@ async function loadMap(name) {
   requestAnimationFrame(fitCanvas);
   
   // Try to load polygon data
-  const mapConfig = AVAILABLE_MAPS.find(m => m.name === name);
-  if (mapConfig && mapConfig.dataFile) {
+  if (entry.dataFile) {
     try {
-      const res = await fetch(`./polyregions/${encodeURIComponent(mapConfig.dataFile)}`);
+      const res = await fetch(`./polyregions/${entry.dataFile}`);
       if (res.ok) {
         const json = await res.json();
         data = { regions: (json.regions || []).map(r => ({ ...r, showName: false })) };

@@ -11,10 +11,10 @@
     <header>
       <h1>Wine Study Tool</h1>
       <div class="controls">
-        <label>
-          Map:
-          <select id="mapSelect"></select>
-        </label>
+        <div class="map-menu-wrap">
+          <button id="mapMenuBtn" class="mode-btn">Map ▾</button>
+          <div id="mapMenu" class="map-menu" hidden></div>
+        </div>
         <button id="setupModeBtn" class="mode-btn hide-mobile">Setup mode</button>
         <button id="studyModeBtn" class="mode-btn hide-mobile">Study mode</button>
         <button id="saveBtn" title="Download polygons data" class="hide-mobile">Download</button>
