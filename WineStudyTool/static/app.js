@@ -145,13 +145,13 @@ function centroid(points) {
 }
 
 function draw() {
-  clearCanvas();
-  if (!image) return;
-  
-  // Calculate image dimensions maintaining aspect ratio (in unscaled canvas space)
-  const canvasAspect = canvas.width / canvas.height;
-  const imageAspect = image.width / image.height;
-  let drawWidth, drawHeight;
+clearCanvas();
+if (!image || !image.width || !image.height) return;
+
+// Calculate image dimensions maintaining aspect ratio (in unscaled canvas space)
+const canvasAspect = canvas.width / canvas.height;
+const imageAspect = image.width / image.height;
+let drawWidth, drawHeight;
 
   if (imageAspect > canvasAspect) {
     // Image is wider - fit to width
@@ -531,15 +531,10 @@ async function loadMap(entry) {
     image.onerror = () => resolve(false);
   });
   image.src = `./maps/${entry.mapFile}`;
-  try {
-    if (image.decode) {
-      await image.decode().catch(() => loadPromise);
-    } else {
-      await loadPromise;
-    }
-  } catch (err) {
-    console.error('Failed to load image:', err);
-  }
+  // Always wait for the load event so image.width / image.height are guaranteed
+  // to be populated before we draw. image.decode() can resolve before the
+  // browser has committed the intrinsic dimensions, causing aspect-ratio bugs.
+  await loadPromise;
   
   // Reset zoom and pan
   scale = 1;
