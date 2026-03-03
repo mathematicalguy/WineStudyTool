@@ -21,6 +21,12 @@
         <button id="loadBtn" title="Upload polygons data" class="hide-mobile">Upload</button>
         <button id="clearBtn" title="Clear unsaved polygons in setup mode" class="hide-mobile">Clear</button>
         <button id="resetZoomBtn" title="Reset zoom and pan (R)" class="hide-mobile">Reset View</button>
+        <div class="quiz-settings-wrap">
+          <button id="quizSettingsBtn" class="mode-btn">Study Settings ▾</button>
+          <div id="quizSettingsMenu" class="quiz-settings-menu" hidden>
+            <div id="quizSettingsBody"></div>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -40,6 +46,10 @@
           <div class="hint">Click to add points. Double-click to close polygon. Use Esc to cancel.<br>
           Mouse wheel to zoom. Right-click drag to pan. R to reset view.</div>
           <ul id="regionsList"></ul>
+          <div id="categoryEditorsWrap" class="category-editors-wrap" hidden>
+            <h3 id="categoryEditorsTitle" class="category-editors-title"></h3>
+            <div id="categoryEditors"></div>
+          </div>
         </div>
         <div class="panel" id="studyPanel" hidden>
           <h2>Study</h2>
@@ -53,7 +63,18 @@
     </main>
   </div>
 
+  <!-- Quiz modal -->
+  <div id="quizModal" class="quiz-modal-overlay" hidden>
+    <div class="quiz-modal">
+      <div id="quizQuestion" class="quiz-question"></div>
+      <div id="quizOptions" class="quiz-options"></div>
+      <div id="quizFeedback" class="quiz-feedback"></div>
+      <button id="quizNextBtn" class="quiz-next-btn" hidden>Continue</button>
+    </div>
+  </div>
+
   <input type="file" id="fileInput" accept=".json" style="display: none;" />
-  <script src="./app.js?v=3"></script>
+  <script src="./quiz.js?v=1"></script>
+  <script src="./app.js?v=4"></script>
 </body>
 </html>

@@ -262,6 +262,11 @@ function pickRegion(normPt) {
 
 function refreshRegionsList() {
   regionsList.innerHTML = '';
+  const categoryEditorsWrap = document.getElementById('categoryEditorsWrap');
+  const categoryEditors = document.getElementById('categoryEditors');
+  const categoryEditorsTitle = document.getElementById('categoryEditorsTitle');
+  if (categoryEditorsWrap) categoryEditorsWrap.hidden = true;
+
   data.regions.forEach((r) => {
     const li = document.createElement('li');
     const color = document.createElement('span');
@@ -272,6 +277,15 @@ function refreshRegionsList() {
     input.value = r.name || '';
     input.placeholder = 'Region name';
     input.addEventListener('input', () => { r.name = input.value; });
+    const edit = document.createElement('button');
+    edit.textContent = 'Edit';
+    edit.addEventListener('click', () => {
+      if (categoryEditorsWrap && categoryEditors) {
+        categoryEditorsWrap.hidden = false;
+        categoryEditorsTitle.textContent = r.name || 'Region';
+        buildCategoryEditors(r, categoryEditors);
+      }
+    });
     const del = document.createElement('button');
     del.textContent = 'Delete';
     del.addEventListener('click', () => {
@@ -281,6 +295,7 @@ function refreshRegionsList() {
     });
     li.appendChild(color);
     li.appendChild(input);
+    li.appendChild(edit);
     li.appendChild(del);
     regionsList.appendChild(li);
   });
@@ -416,7 +431,14 @@ resetZoomBtn.addEventListener('click', resetView);
 // Download polygon data
 saveBtn.addEventListener('click', () => {
   if (!currentMapEntry) return;
-  const dataStr = JSON.stringify(data, null, 2);
+  // Strip runtime-only display properties; keep category arrays
+  const saveData = {
+    regions: data.regions.map(r => {
+      const { fillOverride, strokeOverride, showName, ...rest } = r;
+      return rest;
+    })
+  };
+  const dataStr = JSON.stringify(saveData, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -472,7 +494,20 @@ mapMenu.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-document.addEventListener('click', () => { mapMenu.hidden = true; });
+// -------- Quiz Settings dropdown --------
+const quizSettingsBtn = document.getElementById('quizSettingsBtn');
+const quizSettingsMenu = document.getElementById('quizSettingsMenu');
+
+document.addEventListener('click', () => { mapMenu.hidden = true; quizSettingsMenu.hidden = true; });
+
+quizSettingsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  quizSettingsMenu.hidden = !quizSettingsMenu.hidden;
+});
+
+quizSettingsMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
 
 function buildMenu() {
   mapMenu.innerHTML = '';
@@ -636,7 +671,10 @@ function nextTarget() {
   if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '';
 }
 
+let quizPending = false; // true while a quiz modal is open
+
 function handleStudyClick(region) {
+  if (quizPending) return; // don't accept clicks while quiz modal is up
   const targetId = targetOrder[currentTargetIndex];
   if (!targetId) return;
   // Ignore clicks on already-completed (green) regions
@@ -657,6 +695,23 @@ function handleStudyClick(region) {
     completedRegions.add(region.id);
     studyStatus.innerHTML = '<span class="badge ok">Correct</span>';
     if (mobileStudyStatusEl) mobileStudyStatusEl.innerHTML = '<span class="badge ok">Correct</span>';
+    draw();
+
+    // Check if a follow-up quiz question should be shown
+    if (isQuizActive()) {
+      const question = buildQuestion(data.regions, region);
+      if (question) {
+        quizPending = true;
+        showQuizQuestion(question).then(() => {
+          quizPending = false;
+          currentTargetIndex++;
+          nextTarget();
+          draw();
+        });
+        return;
+      }
+    }
+
     currentTargetIndex++;
     nextTarget();
   } else {
@@ -767,5 +822,6 @@ canvas.addEventListener('touchend', (e) => {
 
 // init
 loadMaps();
+initQuizSettingsUI();
 setMode(isMobile ? 'study' : 'setup');
 fitCanvas();
