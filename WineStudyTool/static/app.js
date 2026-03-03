@@ -544,10 +544,7 @@ async function loadMap(entry) {
   // Reset zoom and pan
   scale = 1;
   origin = { x: 0, y: 0 };
-  
-  fitCanvas();
-  requestAnimationFrame(fitCanvas);
-  
+
   // Try to load polygon data
   if (entry.dataFile) {
     try {
@@ -565,10 +562,15 @@ async function loadMap(entry) {
   } else {
     data = { regions: [] };
   }
-  
+
   refreshRegionsList();
-  draw();
-  if (currentMode === 'study') startStudy();
+  // fitCanvas measures the container and redraws — do it now and again on the
+  // next frame to handle any pending layout recalculations.
+  fitCanvas();
+  requestAnimationFrame(() => {
+    fitCanvas();
+    if (currentMode === 'study') startStudy();
+  });
 }
 
 function startStudy() {
