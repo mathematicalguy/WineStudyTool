@@ -117,10 +117,7 @@ button { cursor: pointer; }
   transition: transform 0.15s;
 }
 .map-menu-header .arrow::after {
-  content: '>';
-}
-.map-menu-header.expanded > .arrow {
-  transform: rotate(90deg);
+  content: '\25B6';
 }
 .map-menu-item {
   position: relative;
@@ -140,6 +137,9 @@ button { cursor: pointer; }
   padding: 0 0 0 12px;
 }
 .map-submenu.open { display: block; }
+.map-menu-header:hover + .map-submenu,
+.map-submenu:hover { display: block; }
+.map-menu-header:hover .arrow { transform: rotate(90deg); }
 .map-submenu .map-menu-item { padding: 5px 12px; }
 .map-menu-divider { height: 1px; background: #2a2a35; margin: 4px 0; }
 .target-name { font-weight: 600; margin-top: 6px; font-size: 18px; color: #f5f5f6; }

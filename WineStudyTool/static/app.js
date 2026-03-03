@@ -476,13 +476,6 @@ function buildMenu() {
     const sub = document.createElement('div');
     sub.className = 'map-submenu';
 
-    // Toggle submenu open/closed on header click
-    header.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = sub.classList.toggle('open');
-      header.classList.toggle('expanded', isOpen);
-    });
-
     // Overall country map entry
     const overall = document.createElement('div');
     overall.className = 'map-menu-item';
