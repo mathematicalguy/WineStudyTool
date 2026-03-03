@@ -454,6 +454,10 @@ mapMenuBtn.addEventListener('click', (e) => {
   mapMenu.hidden = !mapMenu.hidden;
 });
 
+mapMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
 document.addEventListener('click', () => { mapMenu.hidden = true; });
 
 function buildMenu() {
