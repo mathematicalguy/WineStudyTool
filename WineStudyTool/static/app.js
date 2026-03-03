@@ -113,9 +113,18 @@ function setMode(mode) {
 }
 
 function fitCanvas() {
+  // Temporarily shrink canvas so the parent can report its true constrained size
+  canvas.width = 1;
+  canvas.height = 1;
   const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
+  // Account for the border of the parent (canvas-wrap has 2px border)
+  const style = getComputedStyle(canvas.parentElement);
+  const borderL = parseFloat(style.borderLeftWidth) || 0;
+  const borderR = parseFloat(style.borderRightWidth) || 0;
+  const borderT = parseFloat(style.borderTopWidth) || 0;
+  const borderB = parseFloat(style.borderBottomWidth) || 0;
+  canvas.width = rect.width - borderL - borderR;
+  canvas.height = rect.height - borderT - borderB;
   draw();
 }
 window.addEventListener('resize', fitCanvas);
@@ -229,8 +238,11 @@ let drawWidth, drawHeight;
 
 function canvasToNorm(pt) {
   const rect = canvas.getBoundingClientRect();
-  const canvasX = pt.x - rect.left;
-  const canvasY = pt.y - rect.top;
+  // Scale from CSS pixels to canvas-buffer pixels
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const canvasX = (pt.x - rect.left) * scaleX;
+  const canvasY = (pt.y - rect.top) * scaleY;
   // Account for zoom and pan
   const imageX = (canvasX - origin.x) / scale - imageRect.x;
   const imageY = (canvasY - origin.y) / scale - imageRect.y;
@@ -340,12 +352,14 @@ window.addEventListener('keydown', (e) => {
 
 // Mouse wheel zoom
 canvas.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  if (!image) return;
+e.preventDefault();
+if (!image) return;
 
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+const rect = canvas.getBoundingClientRect();
+const scaleX = canvas.width / rect.width;
+const scaleY = canvas.height / rect.height;
+const mouseX = (e.clientX - rect.left) * scaleX;
+const mouseY = (e.clientY - rect.top) * scaleY;
 
   // Calculate zoom factor
   const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
@@ -695,8 +709,10 @@ canvas.addEventListener('touchmove', (e) => {
     const dist = getTouchDist(e.touches[0], e.touches[1]);
     const mid = getTouchMid(e.touches[0], e.touches[1]);
     const rect = canvas.getBoundingClientRect();
-    const midX = mid.x - rect.left;
-    const midY = mid.y - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const midX = (mid.x - rect.left) * scaleX;
+    const midY = (mid.y - rect.top) * scaleY;
     const newScale = Math.max(0.5, Math.min(5, touchState.startScale * (dist / touchState.startDist)));
     origin.x = midX - (midX - touchState.startOrigin.x) * (newScale / touchState.startScale);
     origin.y = midY - (midY - touchState.startOrigin.y) * (newScale / touchState.startScale);

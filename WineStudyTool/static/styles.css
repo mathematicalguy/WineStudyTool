@@ -26,6 +26,8 @@ main { display: grid; grid-template-columns: 1fr 320px; gap: 12px; padding: 12px
 .canvas-wrap {
   position: relative;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
   border: 2px solid #8b1a1a;
   border-radius: 10px;
   background: #0c0c10;
