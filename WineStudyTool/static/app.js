@@ -274,6 +274,9 @@ function refreshRegionsList() {
   });
 }
 
+// Timestamp of last touch-handled tap to suppress synthesized click
+let touchHandledAt = 0;
+
 // Setup interactions
 canvas.addEventListener('click', (e) => {
   if (!image) return;
@@ -651,7 +654,6 @@ function generateUUID() {
 }
 
 // -------- Touch support for mobile --------
-let touchHandledAt = 0; // timestamp of last touch-handled tap to suppress synthesized click
 let touchState = { type: null, startDist: 0, startScale: 1, startOrigin: null, lastTouch: null, moved: false };
 
 function getTouchDist(t1, t2) {
