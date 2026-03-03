@@ -100,6 +100,28 @@ button { cursor: pointer; }
   max-height: 70vh;
   overflow-y: auto;
 }
+.map-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  cursor: pointer;
+  color: #d4d4d8;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.map-menu-header:hover { background: #262630; }
+.map-menu-header .arrow {
+  margin-left: 8px;
+  font-size: 10px;
+  transition: transform 0.15s;
+}
+.map-menu-header .arrow::after {
+  content: '>';
+}
+.map-menu-header.expanded > .arrow {
+  transform: rotate(90deg);
+}
 .map-menu-item {
   position: relative;
   display: flex;
@@ -113,18 +135,6 @@ button { cursor: pointer; }
 }
 .map-menu-item:hover { background: #262630; }
 .map-menu-item.active-map { color: #ff4a4a; font-weight: 600; }
-.map-menu-item .arrow {
-  margin-left: 8px;
-  display: inline-block;
-  width: 0; height: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 5px solid #d4d4d8;
-  transition: transform 0.15s;
-}
-.map-menu-item.expanded > .arrow {
-  transform: rotate(90deg);
-}
 .map-submenu {
   display: none;
   padding: 0 0 0 12px;

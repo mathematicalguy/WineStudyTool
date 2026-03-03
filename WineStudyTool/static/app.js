@@ -459,23 +459,24 @@ document.addEventListener('click', () => { mapMenu.hidden = true; });
 function buildMenu() {
   mapMenu.innerHTML = '';
   for (const country of AVAILABLE_MAPS) {
-    const item = document.createElement('div');
-    item.className = 'map-menu-item';
+    // Country header row — toggles the submenu
+    const header = document.createElement('div');
+    header.className = 'map-menu-header';
     const labelSpan = document.createElement('span');
     labelSpan.textContent = country.label;
-    item.appendChild(labelSpan);
+    header.appendChild(labelSpan);
     const arrow = document.createElement('span');
     arrow.className = 'arrow';
-    item.appendChild(arrow);
+    header.appendChild(arrow);
 
     const sub = document.createElement('div');
     sub.className = 'map-submenu';
 
-    // Toggle submenu open/closed on country click
-    item.addEventListener('click', (e) => {
+    // Toggle submenu open/closed on header click
+    header.addEventListener('click', (e) => {
       e.stopPropagation();
-      item.classList.toggle('expanded');
-      sub.classList.toggle('open');
+      const isOpen = sub.classList.toggle('open');
+      header.classList.toggle('expanded', isOpen);
     });
 
     // Overall country map entry
@@ -505,8 +506,8 @@ function buildMenu() {
       }
     }
 
-    item.appendChild(sub);
-    mapMenu.appendChild(item);
+    mapMenu.appendChild(header);
+    mapMenu.appendChild(sub);
   }
 }
 
@@ -514,9 +515,9 @@ function selectMap(entry) {
   currentMapEntry = entry;
   mapMenu.hidden = true;
   // Collapse all expanded submenus so the menu is clean when reopened
-  mapMenu.querySelectorAll('.map-menu-item.expanded').forEach(el => el.classList.remove('expanded'));
+  mapMenu.querySelectorAll('.map-menu-header.expanded').forEach(el => el.classList.remove('expanded'));
   mapMenu.querySelectorAll('.map-submenu.open').forEach(el => el.classList.remove('open'));
-  mapMenuBtn.textContent = (entry.label || 'Map') + ' \u25BE';
+  mapMenuBtn.textContent = (entry.label || 'Map') + ' v';
   loadMap(entry);
 }
 
