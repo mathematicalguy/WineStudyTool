@@ -297,6 +297,9 @@ body.mobile-mode .mobile-study-overlay { display: block; }
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
+.quiz-modal-overlay[hidden] {
+  display: none;
+}
 .quiz-modal {
   background: #1a1a22;
   border: 2px solid #8b1a1a;
