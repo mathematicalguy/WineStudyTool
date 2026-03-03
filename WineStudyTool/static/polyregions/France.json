@@ -2,7 +2,7 @@
   "regions": [
     {
       "id": "b4473b41-3882-4161-83df-f5bd8a08dd96",
-      "name": "Alsace (Reisling, Pinot Gris Gewurstzimmer)",
+      "name": "Alsace ",
       "color": "hsl(343 70% 70%)",
       "points": [
         {
@@ -38,11 +38,35 @@
           "y": 0.26493755976950323
         }
       ],
-      "showName": false
+      "grapes": [
+        "Riesling",
+        "Pinot Blanc",
+        "Gewurztraminer",
+        "Pinot Gris",
+        "Pinot Noir",
+        "Sylvaner",
+        "Muscat"
+      ],
+      "wines": [
+        "Cremant d'(region name)",
+        "Vendange Tardive"
+      ],
+      "processes": [
+        "Varietal Labeling",
+        "Flute bottle"
+      ],
+      "producers": [
+        "Trimbach",
+        "Domaine Zind Humbrecht"
+      ],
+      "bestBottles": [
+        "Wolfberger Grand Cru",
+        "Trimbach Reserve / Cuvee"
+      ]
     },
     {
       "id": "71cd38d5-1cd1-4c13-8d21-96bfadfafbee",
-      "name": "Champagne (sparkling)",
+      "name": "Champagne ",
       "color": "hsl(146 70% 70%)",
       "points": [
         {
@@ -82,11 +106,40 @@
           "y": 0.2283134315702084
         }
       ],
-      "showName": false
+      "grapes": [
+        "Chardonnay",
+        "Pinot Noir",
+        "Pinot Meunier",
+        "Pinot Blanc",
+        "Pinot Gris",
+        "Petit Meslier"
+      ],
+      "wines": [
+        "Blanc de Blancs",
+        "Blanc de Noirs",
+        "Rose (rgion name"
+      ],
+      "processes": [
+        "Traditional Method",
+        "Lees aging",
+        "Riddling",
+        "Disgorgement"
+      ],
+      "producers": [
+        "Moet Chandon",
+        "Veuve Clicquot",
+        "Dom Perignon",
+        "Louis Roederer"
+      ],
+      "bestBottles": [
+        "Dom Perignon",
+        "Cristal",
+        "Krug Grande Cuvee"
+      ]
     },
     {
       "id": "0268cd4a-77a2-4435-84ed-cde6b2cd939b",
-      "name": "Loire (Savingon Blanc, Muscadet, Chenin Blanc)",
+      "name": "Loire ",
       "color": "hsl(335 70% 70%)",
       "points": [
         {
@@ -134,11 +187,32 @@
           "y": 0.37826505080128353
         }
       ],
-      "showName": false
+      "grapes": [
+        "Sauvignon Blanc",
+        "Chenin Blanc",
+        "Melon de Bourgogne",
+        "Cabernet Franc",
+        "Gamay"
+      ],
+      "wines": [
+        "Cremant de (region name)"
+      ],
+      "processes": [
+        "Sur Lie Aging",
+        "Troglodyte cellars (limestone cliff aging)"
+      ],
+      "producers": [
+        "Domaine Vacheron",
+        "Pascal Jolivet"
+      ],
+      "bestBottles": [
+        "Clos Rougeard \"Le Bourg\"",
+        "Didier Dagueneau \"Silex"
+      ]
     },
     {
       "id": "730df467-95c8-440f-a7c4-7adf7d513915",
-      "name": "Bourgogne (Pinot Noir, Chardonnay)",
+      "name": "Bourgogne ",
       "color": "hsl(4 70% 70%)",
       "points": [
         {
@@ -198,11 +272,36 @@
           "y": 0.34855113546978017
         }
       ],
-      "showName": false
+      "grapes": [
+        "Pinot Noir",
+        "Chardonnay",
+        "Aligote",
+        "Gamay",
+        "Pinot Blanc"
+      ],
+      "wines": [
+        "Chablis",
+        "Macconnay",
+        "Meursault"
+      ],
+      "processes": [
+        "Clonal Selection"
+      ],
+      "producers": [
+        "Domaine la Romanee Conti",
+        "Domaine Leroy",
+        "Domaine Armand Rousseau"
+      ],
+      "bestBottles": [
+        "Romanee Conti",
+        "Le Montrachet",
+        "Chambertin",
+        "Musigny"
+      ]
     },
     {
       "id": "b55780f5-e54d-48e2-af91-e3175cf46f32",
-      "name": "Beaujolais (gamay)",
+      "name": "Beaujolais",
       "color": "hsl(43 70% 70%)",
       "points": [
         {
@@ -238,11 +337,35 @@
           "y": 0.5171603294438923
         }
       ],
-      "showName": false
+      "grapes": [
+        "Gamay",
+        "Chardonnay",
+        "Aligote",
+        "Melon de Bourgogne"
+      ],
+      "wines": [
+        "(Region name)"
+      ],
+      "processes": [
+        "Carbonic Maceration",
+        "Semi Carbonic Maceration",
+        "Granite Soils"
+      ],
+      "producers": [
+        "Marcel Lapierre",
+        "Jean Foillard",
+        "Guy Breton",
+        "Jean  Paul Thevenet"
+      ],
+      "bestBottles": [
+        "Morgon",
+        "Fleurie",
+        "Moulin-a-Vent"
+      ]
     },
     {
       "id": "35a6495d-a8c8-4356-8fa7-38f82e9691c6",
-      "name": "Rhone (Syrah, Grenache blends)",
+      "name": "Rhone",
       "color": "hsl(30 70% 70%)",
       "points": [
         {
@@ -290,11 +413,47 @@
           "y": 0.5600036492241995
         }
       ],
-      "showName": false
+      "grapes": [
+        "Syrah",
+        "Grenache",
+        "Mourvedre",
+        "Cinsault",
+        "Carignan",
+        "Counoise",
+        "Vaccarese",
+        "Viognier",
+        "Marsanne",
+        "Roussanne",
+        "Grenache Blanc",
+        "Clairette"
+      ],
+      "wines": [
+        "Cote Rotie",
+        "Hermitage",
+        "Cornas",
+        "Condrieu",
+        "Chateauneuf du Pape"
+      ],
+      "processes": [
+        "Whole Cluster Fermentation",
+        "Large Oak Foudres",
+        "Field Blending",
+        "Galets"
+      ],
+      "producers": [
+        "E Guigal",
+        "Domaine Jamet",
+        "Chateau Rayas",
+        "Chateau de Beaucastel"
+      ],
+      "bestBottles": [
+        "Guigal \"La La \" wines",
+        "Jean-Louis Chave Hermitage"
+      ]
     },
     {
       "id": "957ea08e-3438-4521-bdf6-48aca5a11db2",
-      "name": "Languedoc Roussillon (Grenache & Carignan Blends)",
+      "name": "Languedoc Roussillon ",
       "color": "hsl(29 70% 70%)",
       "points": [
         {
@@ -334,59 +493,41 @@
           "y": 0.6816233956973297
         }
       ],
-      "showName": false
-    },
-    {
-      "id": "84cebb4b-b41d-4102-8c12-428a394b8c7f",
-      "name": "Provence (Rose Blends)",
-      "color": "hsl(21 70% 70%)",
-      "points": [
-        {
-          "x": 0.6399280712631705,
-          "y": 0.7141013961759496
-        },
-        {
-          "x": 0.6100157030971484,
-          "y": 0.7009719917271457
-        },
-        {
-          "x": 0.5973766742946037,
-          "y": 0.7051181194478207
-        },
-        {
-          "x": 0.5961127714143493,
-          "y": 0.7534896095223611
-        },
-        {
-          "x": 0.6744747499901258,
-          "y": 0.7431242902206738
-        },
-        {
-          "x": 0.7220817584797103,
-          "y": 0.7479614392281279
-        },
-        {
-          "x": 0.7246095642402193,
-          "y": 0.7210116090437411
-        },
-        {
-          "x": 0.6736321480699561,
-          "y": 0.6961348427196917
-        },
-        {
-          "x": 0.6205482270992688,
-          "y": 0.7037360768742624
-        },
-        {
-          "x": 0.6205482270992688,
-          "y": 0.7037360768742624
-        }
+      "grapes": [
+        "Grenache",
+        "Syrah",
+        "Mouvedre",
+        "Carignan",
+        "Cinsault",
+        "Grenache Blanc",
+        "Roussanne",
+        "Marsanne",
+        "Clairette",
+        "Viognier"
       ],
-      "showName": false
+      "wines": [
+        "Limoux",
+        "Banyuls",
+        "Maury"
+      ],
+      "processes": [
+        "Old Vine Carignan Revival",
+        "Meditaranian climate",
+        "IGP Pays d'Oc",
+        "Oxidative aging"
+      ],
+      "producers": [
+        "Mas de Daumas Gassac",
+        "Domaine Tempier"
+      ],
+      "bestBottles": [
+        "Grange des Peres Rouge",
+        "Mas de Daumas Gassac Rouge"
+      ]
     },
     {
       "id": "9ca1c48d-2350-494c-8cb6-1dc081ba218c",
-      "name": "Corse (red & Rose Blends)",
+      "name": "Corse ",
       "color": "hsl(202 70% 70%)",
       "points": [
         {
@@ -426,11 +567,30 @@
           "y": 0.7818214822803061
         }
       ],
-      "showName": false
+      "grapes": [
+        "Niellucciu",
+        "Sciaccarellu",
+        "Vermentino",
+        "Biancu Gentile"
+      ],
+      "wines": [
+        "Patrimonio",
+        "Ajaccio"
+      ],
+      "processes": [
+        "Island terroir"
+      ],
+      "producers": [
+        "Domaine Comte Abbatucci"
+      ],
+      "bestBottles": [
+        "Faustine",
+        "Patrimonio"
+      ]
     },
     {
       "id": "ba2d08fe-ff29-477e-9bc0-dcbf3df43e88",
-      "name": "Sud OUEST (Malbec)",
+      "name": "Sud OUEST",
       "color": "hsl(190 70% 70%)",
       "points": [
         {
@@ -498,11 +658,39 @@
           "y": 0.5987008412838318
         }
       ],
-      "showName": false
+      "grapes": [
+        "Malbec",
+        "Tannat",
+        "Duras",
+        "Fer Servadou",
+        "Negrette",
+        "Gros Manseng",
+        "Petit Mansaeng",
+        "Colombard",
+        "Mauzac"
+      ],
+      "wines": [
+        "Cahors",
+        "Madiran",
+        "Gaillac",
+        "Fronton"
+      ],
+      "processes": [
+        "Late Harvest",
+        "Micro-oxygenation"
+      ],
+      "producers": [
+        "Cahteau Montus",
+        "Clos Triguedina"
+      ],
+      "bestBottles": [
+        "Jurancon sweet wines",
+        "Chateau Montus Prestige"
+      ]
     },
     {
       "id": "2071fe97-a090-449e-9261-329d044edb4c",
-      "name": "Bordeaux (Cabernet Savignon & Merlot Blends)",
+      "name": "Bordeaux",
       "color": "hsl(193 70% 70%)",
       "points": [
         {
@@ -546,7 +734,108 @@
           "y": 0.5800432665407949
         }
       ],
-      "showName": false
+      "grapes": [
+        "Merlot",
+        "Cabernet Sauvignon",
+        "Cabernet Franc",
+        "Petit Verdot",
+        "Malbec",
+        "Carmenere",
+        "Sauvignon Blanc",
+        "Semillon",
+        "Muscadelle"
+      ],
+      "wines": [
+        "Medoc",
+        "Paulliac",
+        "Margaux",
+        "Saint-Julien",
+        "Saint-Estephe",
+        "Saint-Emillon",
+        "Pomerol"
+      ],
+      "processes": [
+        "Blending",
+        "Oakage",
+        "En Primeur System"
+      ],
+      "producers": [
+        "Chateau Lafite Rothschild",
+        "Chateau Latour",
+        "Chateau Margaux",
+        "Chateau Haut Brion",
+        "Chateau Mouton Rothschild",
+        "Chateau d'Yquem",
+        "Chateau Petrus",
+        "Chateau Cheval Blanc",
+        "Chateau Ausone",
+        "Chateau Angelus"
+      ],
+      "bestBottles": [
+        "Lafite Rothschild",
+        "Latour",
+        "Margaux"
+      ]
+    },
+    {
+      "id": "10dcc754-a277-4de8-a1b5-d2a2f6239d27",
+      "name": "Provence",
+      "color": "hsl(175 70% 70%)",
+      "points": [
+        {
+          "x": 0.6064330879476837,
+          "y": 0.7100501624893638
+        },
+        {
+          "x": 0.6881718215508222,
+          "y": 0.7208436581653365
+        },
+        {
+          "x": 0.7440983234898118,
+          "y": 0.7131340183967846
+        },
+        {
+          "x": 0.7082480017340492,
+          "y": 0.7717272806377794
+        },
+        {
+          "x": 0.6207732166499887,
+          "y": 0.7748111365452003
+        },
+        {
+          "x": 0.6164711780392972,
+          "y": 0.7131340183967846
+        },
+        {
+          "x": 0.6164711780392972,
+          "y": 0.7131340183967846
+        }
+      ],
+      "grapes": [
+        "Grenache",
+        "Cinsault",
+        "Mouvedre",
+        "Syrah",
+        "Tibouren",
+        "Rolle",
+        "Clairette",
+        "Ugni Blanc"
+      ],
+      "wines": [
+        "Cotes de (name)",
+        "Bandol"
+      ],
+      "processes": [
+        "Rose process named after this area"
+      ],
+      "producers": [
+        "Chateau de Pibarnon",
+        "Domaine Tempier"
+      ],
+      "bestBottles": [
+        "Bandol Rouge",
+        "Garrus"
+      ]
     }
   ]
 }
