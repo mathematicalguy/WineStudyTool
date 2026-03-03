@@ -556,17 +556,22 @@ async function loadMap(entry) {
 
   // Try to load polygon data
   if (entry.dataFile) {
-    try {
-      const res = await fetch(`./polyregions/${entry.dataFile}`);
-      if (res.ok) {
-        const json = await res.json();
-        data = { regions: (json.regions || []).map(r => ({ ...r, showName: false })) };
-      } else {
-        data = { regions: [] };
-      }
-    } catch (err) {
-      console.error('Failed to load polygon data:', err);
-      data = { regions: [] };
+      try {
+          const res = await fetch(`./polyregions/${entry.dataFile}`);
+          console.log(`Fetching: ./polyregions/${entry.dataFile}`, res.status, res.ok);
+          if (res.ok) {
+              const json = await res.json();
+              console.log('Loaded JSON:', json);
+              console.log('Number of regions:', json.regions?.length || 0);
+              data = { regions: (json.regions || []).map(r => ({ ...r, showName: false })) };
+              console.log('Data after mapping:', data);
+          } else {
+              console.warn('Failed to load polygon data, using empty regions');
+              data = { regions: [] };
+          }
+      } catch (err) {
+          console.error('Failed to load polygon data:', err);
+          data = { regions: [] };
     }
   } else {
     data = { regions: [] };
