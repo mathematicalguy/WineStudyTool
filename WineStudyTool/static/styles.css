@@ -23,7 +23,7 @@ header {
 h1 { font-size: 18px; margin: 0; color: #f3f3f4; }
 .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 main { display: grid; grid-template-columns: 1fr 320px; grid-template-rows: 1fr; gap: 12px; padding: 12px; flex: 1; min-height: 0; overflow: hidden; }
-aside { min-height: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+aside { min-height: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden; max-height: 100%; }
 .canvas-wrap {
   position: relative;
   height: 100%;
@@ -48,7 +48,6 @@ border-radius: 0px;
 padding: 12px;
 flex: 1;
 min-height: 0;
-max-height: 100%;
 overflow-y: auto;
 overflow-x: hidden;
   background: #15151b;
@@ -170,6 +169,13 @@ button { cursor: pointer; }
   color: #f4f4f6;
   pointer-events: none;
 }
+
+/* Scrollbar styling for panels */
+.panel::-webkit-scrollbar { width: 8px; }
+.panel::-webkit-scrollbar-track { background: #15151b; border-radius: 4px; }
+.panel::-webkit-scrollbar-thumb { background: #3a3a48; border-radius: 4px; border: 1px solid #15151b; }
+.panel::-webkit-scrollbar-thumb:hover { background: #ff4a4a; }
+.panel { scrollbar-width: thin; scrollbar-color: #3a3a48 #15151b; }
 
 @keyframes borderPulse {
   0%, 100% {
