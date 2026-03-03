@@ -1,9 +1,15 @@
 * { box-sizing: border-box; }
-body {
+html, body {
   margin: 0;
+  height: 100%;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   color: #e9e9ea;
   background: #0f0f12;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 header {
   display: flex;
@@ -16,7 +22,7 @@ header {
 }
 h1 { font-size: 18px; margin: 0; color: #f3f3f4; }
 .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-main { display: grid; grid-template-columns: 1fr 320px; gap: 12px; padding: 12px; height: calc(100vh - 60px); }
+main { display: grid; grid-template-columns: 1fr 320px; gap: 12px; padding: 12px; flex: 1; min-height: 0; overflow: hidden; }
 .canvas-wrap {
   position: relative;
   height: 100%;
@@ -185,7 +191,6 @@ body.mobile-mode .hide-mobile { display: none !important; }
 body.mobile-mode main {
   grid-template-columns: 1fr;
   padding: 6px;
-  height: calc(100vh - 90px);
 }
 
 body.mobile-mode aside { display: none; }
@@ -227,7 +232,7 @@ body.mobile-mode .mobile-study-overlay { display: block; }
   header { flex-wrap: wrap; gap: 6px; }
   header h1 { width: 100%; font-size: 16px; }
   .controls { width: 100%; justify-content: flex-start; }
-  main { grid-template-columns: 1fr; height: calc(100vh - 90px); padding: 6px; }
+  main { grid-template-columns: 1fr; padding: 6px; }
   aside { display: none; }
   .mobile-study-overlay { display: block; }
 }
